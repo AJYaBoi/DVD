@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DVD Bouncing Logo</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .dvd {
+            position: absolute;
+            width: 100px;
+            height: 50px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body>
+    <div class="dvd" id="dvd"></div>
+    <script>
+        const dvd = document.getElementById('dvd');
+        const dvdImages = [
+            'dvdPNG/dvd1.png',
+            'dvdPNG/dvd2.png',
+            'dvdPNG/dvd3.png',
+            'dvdPNG/dvd4.png',
+            'dvdPNG/dvd5.png'
+        ];
+        
+        let currentImageIndex = 0;
+        dvd.style.backgroundImage = `url(${dvdImages[currentImageIndex]})`;
+
+        let x = Math.random() * window.innerWidth;
+        let y = Math.random() * window.innerHeight;
+        let dx = 2;
+        let dy = 2;
+
+        function changeImage() {
+            currentImageIndex = (currentImageIndex + 1) % dvdImages.length;
+            dvd.style.backgroundImage = `url(${dvdImages[currentImageIndex]})`;
+        }
+
+        function animate() {
+            if (x + dvd.clientWidth >= window.innerWidth || x <= 0) {
+                dx = -dx;
+                changeImage();
+            }
+            if (y + dvd.clientHeight >= window.innerHeight || y <= 0) {
+                dy = -dy;
+                changeImage();
+            }
+            x += dx;
+            y += dy;
+            dvd.style.left = `${x}px`;
+            dvd.style.top = `${y}px`;
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
