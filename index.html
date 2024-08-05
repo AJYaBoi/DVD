@@ -17,8 +17,8 @@
         }
         .dvd {
             position: absolute;
-            width: 300px;  /* Set size */
-            height: 100px; /* Set size */
+            width: 300px;  /* Updated size */
+            height: 100px; /* Updated size */
             background-size: contain;
             background-repeat: no-repeat;
         }
@@ -52,24 +52,24 @@
 
         function animate() {
             // Boundary checks
-            if (x + dvd.clientWidth > window.innerWidth) {
+            if (x + dvd.clientWidth > window.innerWidth || x < 0) {
                 dx = -dx;
-                x = window.innerWidth - dvd.clientWidth; // Adjust position
+                if (x + dvd.clientWidth > window.innerWidth) {
+                    x = window.innerWidth - dvd.clientWidth;
+                }
+                if (x < 0) {
+                    x = 0;
+                }
                 changeImage();
             }
-            if (x < 0) {
-                dx = -dx;
-                x = 0; // Adjust position
-                changeImage();
-            }
-            if (y + dvd.clientHeight > window.innerHeight) {
+            if (y + dvd.clientHeight > window.innerHeight || y < 0) {
                 dy = -dy;
-                y = window.innerHeight - dvd.clientHeight; // Adjust position
-                changeImage();
-            }
-            if (y < 0) {
-                dy = -dy;
-                y = 0; // Adjust position
+                if (y + dvd.clientHeight > window.innerHeight) {
+                    y = window.innerHeight - dvd.clientHeight;
+                }
+                if (y < 0) {
+                    y = 0;
+                }
                 changeImage();
             }
             x += dx;
