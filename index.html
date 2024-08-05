@@ -16,8 +16,8 @@
         }
         .dvd {
             position: absolute;
-            width: 200px;  /* Increased size */
-            height: 100px; /* Increased size */
+            width: 400px;  /* Increased size */
+            height: 200px; /* Increased size */
             background-size: contain;
             background-repeat: no-repeat;
         }
@@ -38,8 +38,9 @@
         let currentImageIndex = 0;
         dvd.style.backgroundImage = `url(${dvdImages[currentImageIndex]})`;
 
-        let x = Math.random() * (window.innerWidth - dvd.clientWidth);
-        let y = Math.random() * (window.innerHeight - dvd.clientHeight);
+        // Initial position in the middle somewhere, not at the edge
+        let x = window.innerWidth / 4 + Math.random() * (window.innerWidth / 2 - dvd.clientWidth);
+        let y = window.innerHeight / 4 + Math.random() * (window.innerHeight / 2 - dvd.clientHeight);
         let dx = 2;
         let dy = 2;
 
