@@ -10,10 +10,13 @@
             overflow: hidden;
             background-color: #000;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             width: 100vw;
+            color: white;
+            font-family: Arial, sans-serif;
         }
         .dvd {
             position: absolute;
@@ -22,10 +25,36 @@
             background-size: contain;
             background-repeat: no-repeat;
         }
+        .hidden {
+            display: none;
+        }
+        #redirectMessage {
+            position: absolute;
+            bottom: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .input-container {
+            position: absolute;
+            top: 20px;
+        }
+        .input-container input {
+            font-size: 18px;
+            padding: 5px;
+        }
+        .input-container button {
+            padding: 5px 10px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
     <div class="dvd" id="dvd"></div>
+    <div class="input-container">
+        <input type="text" id="userInput" placeholder="Type 'dvd' here">
+        <button onclick="checkInput()">Submit</button>
+    </div>
+    <div id="redirectMessage" class="hidden"></div>
     <script>
         const dvd = document.getElementById('dvd');
         const dvdImages = [
@@ -39,7 +68,6 @@
         let currentImageIndex = 0;
         dvd.style.backgroundImage = `url(${dvdImages[currentImageIndex]})`;
 
-        // Initial position in the middle somewhere, not at the edge
         let x = Math.random() * (window.innerWidth - dvd.clientWidth);
         let y = Math.random() * (window.innerHeight - dvd.clientHeight);
         let dx = 2;
@@ -51,7 +79,6 @@
         }
 
         function animate() {
-            // Boundary checks and adjustments
             if (x + dvd.clientWidth > window.innerWidth || x < 0) {
                 dx = -dx;
                 x = Math.max(0, Math.min(x, window.innerWidth - dvd.clientWidth));
@@ -70,6 +97,19 @@
         }
 
         animate();
+
+        function checkInput() {
+            const userInput = document.getElementById('userInput').value.trim().toLowerCase();
+            if (userInput === 'dvd') {
+                document.getElementById('redirectMessage').textContent = 'Loading Web Video Player...';
+                document.getElementById('redirectMessage').classList.remove('hidden');
+                setTimeout(() => {
+                    window.location.href = '/VideoPlayer/index.html';
+                }, 2000); // Delay redirect for 2 seconds to display the message
+            } else {
+                alert('Please type "dvd"');
+            }
+        }
     </script>
 </body>
 </html>
