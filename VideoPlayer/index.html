@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Player</title>
+    <title>Scrolling DVD Logos</title>
     <style>
         body {
             margin: 0;
@@ -13,66 +13,35 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            width: 100vw;
             color: white;
             font-family: Arial, sans-serif;
         }
-        .container {
+        .scrolling-container {
             position: relative;
-            width: 80%;
-            max-width: 800px;
-            height: 80%;
-            max-height: 600px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            width: 100%;
+            height: 100px; /* Adjust height to fit the logos */
+            overflow: hidden;
+            white-space: nowrap;
         }
         .dvd {
-            width: 300px;  /* Size set to 300px x 100px */
-            height: 100px; /* Size set to 300px x 100px */
+            display: inline-block;
+            width: 100px;  /* Adjust size as needed */
+            height: 100px;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            margin-bottom: 20px;
-            background-color: #fff; /* Set a background color to see the area */
+            animation: scroll 10s linear infinite;
         }
-        .dropzone {
-            width: 100%;
-            height: 300px; /* Adjust size as needed */
-            border: 2px dashed #fff;
-            background-color: #000;
-            color: #fff;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-        video {
-            width: 100%;
-            height: auto;
-            background-color: #000;
-        }
-        .hidden {
-            display: none;
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="dvd" id="dvd"></div>
-        <div class="dropzone" id="dropzone">
-            <video id="videoPlayer" class="hidden" controls></video>
-            <p id="dropMessage">Drop your video file here</p>
-        </div>
-    </div>
-    <script>
-        const dvd = document.getElementById('dvd');
-        const videoPlayer = document.getElementById('videoPlayer');
-        const dropzone = document.getElementById('dropzone');
-        const dropMessage = document.getElementById('dropMessage');
+    <div class="scrolling-container" id="scrollingContainer"></div>
 
+    <script>
         const dvdImages = [
             'dvdPNG/dvd1.png',
             'dvdPNG/dvd2.png',
@@ -80,48 +49,16 @@
             'dvdPNG/dvd4.png',
             'dvdPNG/dvd5.png'
         ];
-        let currentImageIndex = 0;
-        
-        function changeDVDImage() {
-            currentImageIndex = (currentImageIndex + 1) % dvdImages.length;
-            dvd.style.backgroundImage = `url(${dvdImages[currentImageIndex]})`;
+
+        const container = document.getElementById('scrollingContainer');
+
+        // Add a large number of logos to create an infinite scrolling effect
+        for (let i = 0; i < 50; i++) {
+            const img = document.createElement('div');
+            img.className = 'dvd';
+            img.style.backgroundImage = `url(${dvdImages[i % dvdImages.length]})`;
+            container.appendChild(img);
         }
-        
-        // Change the DVD logo image every 5 seconds
-        setInterval(changeDVDImage, 5000);
-
-        // Handle drag-and-drop functionality
-        dropzone.addEventListener('dragover', (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-        });
-
-        dropzone.addEventListener('drop', (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-
-            const file = event.dataTransfer.files[0];
-            if (file && file.type.startsWith('video/')) {
-                const videoURL = URL.createObjectURL(file);
-                videoPlayer.src = videoURL;
-                videoPlayer.classList.remove('hidden');
-                dropMessage.classList.add('hidden');
-                videoPlayer.play();
-            } else {
-                alert('Please drop a video file.');
-            }
-        });
-
-        // Initialize DVD image
-        dvd.style.backgroundImage = `url(${dvdImages[currentImageIndex]})`;
-
-        // Log errors if images do not load
-        dvdImages.forEach((src) => {
-            const img = new Image();
-            img.onload = () => console.log(`${src} loaded successfully.`);
-            img.onerror = () => console.error(`${src} failed to load.`);
-            img.src = src;
-        });
     </script>
 </body>
 </html>
