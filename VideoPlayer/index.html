@@ -16,37 +16,41 @@
             width: 100vw;
             color: white;
             font-family: Arial, sans-serif;
-            position: relative; /* Allow absolute positioning within */
         }
-        .dvd-container {
-            position: absolute;
-            top: calc(50% - 130px); /* Position above the dropzone */
-            left: 50%;
-            transform: translate(-50%, 0);
+        .container {
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            height: 80%;
+            max-height: 600px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .dvd {
             width: 300px;  /* Size set to 300px x 100px */
             height: 100px; /* Size set to 300px x 100px */
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            z-index: 10; /* Ensure it's on top of other elements */
+            margin-bottom: 20px;
         }
         .dropzone {
-            width: 300px; /* Adjust size as needed */
-            height: 200px; /* Adjust size as needed */
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 100%;
+            height: 300px; /* Adjust size as needed */
             border: 2px dashed #fff;
             background-color: #000;
             color: #fff;
             text-align: center;
-            position: relative; /* Allow positioning of DVD logo above */
-            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
         video {
             width: 100%;
-            height: 100%;
-            border: 2px solid #fff;
+            height: auto;
             background-color: #000;
         }
         .hidden {
@@ -55,14 +59,18 @@
     </style>
 </head>
 <body>
-    <div class="dvd-container" id="dvd"></div>
-    <div class="dropzone" id="dropzone">
-        <video id="videoPlayer" class="hidden" controls></video>
+    <div class="container">
+        <div class="dvd" id="dvd"></div>
+        <div class="dropzone" id="dropzone">
+            <video id="videoPlayer" class="hidden" controls></video>
+            <p id="dropMessage">Drop your video file here</p>
+        </div>
     </div>
     <script>
         const dvd = document.getElementById('dvd');
         const videoPlayer = document.getElementById('videoPlayer');
         const dropzone = document.getElementById('dropzone');
+        const dropMessage = document.getElementById('dropMessage');
 
         const dvdImages = [
             'dvdPNG/dvd1.png',
@@ -96,6 +104,7 @@
                 const videoURL = URL.createObjectURL(file);
                 videoPlayer.src = videoURL;
                 videoPlayer.classList.remove('hidden');
+                dropMessage.classList.add('hidden');
                 videoPlayer.play();
             } else {
                 alert('Please drop a video file.');
