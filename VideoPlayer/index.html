@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scrolling DVD Logos</title>
+    <title>DVD Logo Screen</title>
     <style>
         body {
             margin: 0;
@@ -13,33 +13,59 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            width: 100vw;
             color: white;
             font-family: Arial, sans-serif;
         }
-        .scrolling-container {
-            position: relative;
-            width: 100%;
-            height: 100px; /* Adjust height to fit the logos */
-            overflow: hidden;
-            white-space: nowrap;
+        .logo-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
+            width: 100vw;
+            height: 100vh;
         }
         .dvd {
-            display: inline-block;
-            width: 100px;  /* Adjust size as needed */
+            width: 100px;
             height: 100px;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            animation: scroll 10s linear infinite;
+            animation: changeColor 5s infinite;
         }
-        @keyframes scroll {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
+        @keyframes changeColor {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+        .dropzone {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            text-align: center;
+            font-size: 24px;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .hidden {
+            display: none;
+        }
+        .old-video-effect {
+            filter: grayscale(100%) contrast(150%) brightness(80%);
         }
     </style>
 </head>
 <body>
-    <div class="scrolling-container" id="scrollingContainer"></div>
+    <div class="logo-container" id="logoContainer"></div>
+    <div class="dropzone hidden" id="dropzone">
+        Drop your video file here
+    </div>
+    <video id="videoPlayer" class="hidden" controls></video>
 
     <script>
         const dvdImages = [
@@ -50,15 +76,56 @@
             'dvdPNG/dvd5.png'
         ];
 
-        const container = document.getElementById('scrollingContainer');
+        const logoContainer = document.getElementById('logoContainer');
+        const dropzone = document.getElementById('dropzone');
+        const videoPlayer = document.getElementById('videoPlayer');
 
-        // Add a large number of logos to create an infinite scrolling effect
-        for (let i = 0; i < 50; i++) {
-            const img = document.createElement('div');
-            img.className = 'dvd';
-            img.style.backgroundImage = `url(${dvdImages[i % dvdImages.length]})`;
-            container.appendChild(img);
+        function createDVDLogos() {
+            for (let i = 0; i < 100; i++) {
+                const img = document.createElement('div');
+                img.className = 'dvd';
+                img.style.backgroundImage = `url(${dvdImages[i % dvdImages.length]})`;
+                logoContainer.appendChild(img);
+            }
         }
+
+        function showDropzone() {
+            dropzone.classList.remove('hidden');
+            dropzone.style.pointerEvents = 'all';
+        }
+
+        function hideDropzone() {
+            dropzone.classList.add('hidden');
+            dropzone.style.pointerEvents = 'none';
+        }
+
+        document.body.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            showDropzone();
+        });
+
+        document.body.addEventListener('dragleave', (event) => {
+            event.preventDefault();
+            hideDropzone();
+        });
+
+        document.body.addEventListener('drop', (event) => {
+            event.preventDefault();
+            hideDropzone();
+
+            const file = event.dataTransfer.files[0];
+            if (file && file.type.startsWith('video/')) {
+                const videoURL = URL.createObjectURL(file);
+                videoPlayer.src = videoURL;
+                videoPlayer.classList.remove('hidden');
+                videoPlayer.classList.add('old-video-effect');
+                videoPlayer.play();
+            } else {
+                alert('Please drop a video file.');
+            }
+        });
+
+        createDVDLogos();
     </script>
 </body>
 </html>
