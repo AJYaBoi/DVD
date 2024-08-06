@@ -55,27 +55,21 @@
         .hidden {
             display: none;
         }
-        .video-wrapper {
+        .video-container {
             position: absolute;
-            width: 80%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
             max-width: 800px;
+            height: auto;
             z-index: 20;
         }
         .old-video-effect {
             position: relative;
             width: 100%;
             height: auto;
-            filter: grayscale(100%) contrast(150%) brightness(80%);
-        }
-        .old-video-effect::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://www.transparenttextures.com/patterns/crossword.png');
-            opacity: 0.2;
+            filter: grayscale(50%) contrast(150%) brightness(90%) saturate(120%);
         }
         .old-video-effect::before {
             content: '';
@@ -84,8 +78,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 0, 0, 0.1);
+            background: url('staticNoise.gif');
+            opacity: 0.2;
             mix-blend-mode: screen;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -94,7 +90,7 @@
     <div class="dropzone hidden" id="dropzone">
         Drop your video file here
     </div>
-    <div class="video-wrapper hidden" id="videoWrapper">
+    <div class="video-container hidden" id="videoContainer">
         <video id="videoPlayer" class="old-video-effect" controls></video>
     </div>
 
@@ -109,7 +105,7 @@
 
         const logoContainer = document.getElementById('logoContainer');
         const dropzone = document.getElementById('dropzone');
-        const videoWrapper = document.getElementById('videoWrapper');
+        const videoContainer = document.getElementById('videoContainer');
         const videoPlayer = document.getElementById('videoPlayer');
 
         function createDVDLogos() {
@@ -149,7 +145,8 @@
             if (file && file.type.startsWith('video/')) {
                 const videoURL = URL.createObjectURL(file);
                 videoPlayer.src = videoURL;
-                videoWrapper.classList.remove('hidden');
+                videoPlayer.classList.remove('hidden');
+                videoContainer.classList.remove('hidden');
                 videoPlayer.play();
             } else {
                 alert('Please drop a video file.');
