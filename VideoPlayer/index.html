@@ -113,6 +113,15 @@
 
         // Initialize DVD image
         dvd.style.backgroundImage = `url(${dvdImages[currentImageIndex]})`;
+        dvd.style.backgroundColor = '#fff'; // Set a background color to see the area
+
+        // Log errors if images do not load
+        dvdImages.forEach((src) => {
+            const img = new Image();
+            img.onload = () => console.log(`${src} loaded successfully.`);
+            img.onerror = () => console.error(`${src} failed to load.`);
+            img.src = src;
+        });
     </script>
 </body>
 </html>
